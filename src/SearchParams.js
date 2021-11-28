@@ -15,6 +15,10 @@ const SearchParams = () => {
     requestPets();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    setBreed("");
+  }, [breeds]);
+
   async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
