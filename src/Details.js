@@ -1,10 +1,12 @@
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Carousel from "./Carousel";
+import Modal from "./Modal";
 import ErrorBoundary from "./ErrorBoundary";
+import ThemeContext from "./ThemeContext";
 
 class Details extends Component {
-  state = { loading: true };
+  state = { loading: true, showModal: false };
 
   // constructor() {
   //   super();
@@ -25,6 +27,14 @@ class Details extends Component {
     });
   }
 
+  toggleModal = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
+
+  adopt = () => {
+    window.location = "http://www.google.com";
+  };
+
   render() {
     if (this.state.loading) {
       return (
@@ -42,8 +52,29 @@ class Details extends Component {
         <Carousel images={images} />
         <h1>{name}</h1>
         <h2>{`${animal} - ${breed} - ${city}, ${state}`}</h2>
-        <button>{`Adopt ${name}`}</button>
+
+        <ThemeContext.Consumer>
+          {([theme]) => {
+            return (
+              <button
+                onClick={this.toggleModal}
+                style={{ backgroundColor: theme }}
+              >{`Adopt ${name}`}</button>
+            );
+          }}
+        </ThemeContext.Consumer>
         <p>{description}</p>
+        {this.state.showModal ? (
+          <Modal>
+            <div>
+              <h1>Would you like to adopt {name}?</h1>
+              <div className="buttons">
+                <button onClick={this.adopt}>Yes</button>
+                <button onClick={this.toggleModal}>No</button>
+              </div>
+            </div>
+          </Modal>
+        ) : null}
       </div>
     );
   }
